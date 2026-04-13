@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>国际权威智商测试 v3.7.2</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a12;--card:#12121f;--accent:#00f0ff;--accent2:#ff2d75;
+  --gold:#ffd700;--text:#e0e0ee;--dim:#555570;
+}
+body{
+  font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text);
+  min-height:100vh;overflow-x:hidden;position:relative;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background:radial-gradient(ellipse at 20% 50%,rgba(0,240,255,.06) 0%,transparent 50%),
+             radial-gradient(ellipse at 80% 20%,rgba(255,45,117,.05) 0%,transparent 50%),
+             radial-gradient(ellipse at 50% 80%,rgba(255,215,0,.04) 0%,transparent 50%);
+  pointer-events:none;z-index:0;
+}
+.scanline{
+  position:fixed;inset:0;pointer-events:none;z-index:9999;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);
+}
+.close-btn{
+  position:fixed;top:18px;right:22px;z-index:100;width:36px;height:36px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+  border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all .3s;color:var(--dim);font-size:18px;
+}
+.close-btn:hover{background:rgba(255,45,117,.15);border-color:var(--accent2);color:var(--accent2);transform:rotate(90deg)}
+.container{
+  position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;min-height:100vh;padding:20px;
+}
+/* ===== 首页 ===== */
+.home-page .badge{
+  font-family:'Orbitron',monospace;font-size:11px;letter-spacing:4px;text-transform:uppercase;
+  color:var(--accent);border:1px solid rgba(0,240,255,.3);padding:6px 18px;border-radius:20px;
+  margin-bottom:30px;opacity:.8;
+}
+.home-page h1{
+  font-family:'Orbitron',monospace;font-size:clamp(28px,6vw,52px);font-weight:900;
+  text-align:center;line-height:1.2;margin-bottom:12px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.home-page .subtitle{
+  color:var(--dim);font-size:14px;text-align:center;max-width:400px;line-height:1.8;margin-bottom:50px;
+}
+.start-btn{
+  position:relative;padding:16px 60px;font-size:18px;font-weight:700;
+  font-family:'Noto Sans SC',sans-serif;color:#fff;
+  background:linear-gradient(135deg,var(--accent2),#a020f0);
+  border:none;border-radius:60px;cursor:pointer;letter-spacing:2px;
+  transition:all .4s;overflow:hidden;
+}
+.start-btn::before{
+  content:'';position:absolute;inset:-2px;border-radius:62px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2),var(--gold));
+  z-index:-1;filter:blur(12px);opacity:.5;transition:opacity .4s;
+}
+.start-btn:hover{transform:translateY(-3px);box-shadow:0 10px 40px rgba(255,45,117,.4)}
+.start-btn:hover::before{opacity:.9}
+.start-btn:active{transform:translateY(0)}
+.disclaimer{
+  margin-top:50px;font-size:11px;color:rgba(255,255,255,.15);text-align:center;max-width:360px;line-height:1.6;
+}
+
+/* ===== 加载 ===== */
+.loading-page{display:none}
+.loading-page .brain{font-size:80px;animation:pulse 1s infinite alternate}
+@keyframes pulse{0%{transform:scale(1);opacity:.6}100%{transform:scale(1.15);opacity:1}}
+.loading-page .progress-bar{
+  width:280px;height:4px;background:rgba(255,255,255,.08);border-radius:4px;margin-top:30px;overflow:hidden;
+}
+.loading-page .progress-fill{
+  width:0%;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));
+  border-radius:4px;transition:width .1s linear;
+}
+.loading-page .load-text{margin-top:18px;font-size:13px;color:var(--dim);min-height:20px}
+
+/* ===== 结果 ===== */
+.result-page{display:none}
+.result-card{
+  background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:24px;
+  padding:50px 40px;text-align:center;max-width:420px;width:100%;position:relative;
+  box-shadow:0 20px 80px rgba(0,0,0,.5);
+}
+.result-label{font-size:13px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin-bottom:8px}
+.score-display{
+  font-family:'Orbitron',monospace;font-size:96px;font-weight:900;line-height:1;margin:10px 0;
+  transition:all .3s;
+}
+.score-unit{font-family:'Orbitron',monospace;font-size:14px;color:var(--dim);letter-spacing:2px;margin-bottom:28px}
+.divider{width:60px;height:2px;margin:0 auto 28px;border-radius:2px}
+.rank-title{font-size:22px;font-weight:900;margin-bottom:14px;letter-spacing:1px}
+.analysis{font-size:14px;line-height:2;color:var(--dim);max-width:340px;margin:0 auto 36px}
+.retry-btn{
+  padding:12px 40px;font-size:15px;font-weight:700;
+  font-family:'Noto Sans SC',sans-serif;color:var(--text);
+  background:transparent;border:1px solid rgba(255,255,255,.15);
+  border-radius:40px;cursor:pointer;transition:all .3s;letter-spacing:1px;
+}
+.retry-btn:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 20px rgba(0,240,255,.15)}
+.share-hint{margin-top:20px;font-size:11px;color:rgba(255,255,255,.12)}
+
+/* ===== 100分特效 ===== */
+.score-100 .score-display{
+  background:linear-gradient(135deg,var(--gold),#fff,var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;animation:shimmer 2s infinite;
+}
+@keyframes shimmer{
+  0%,100%{filter:brightness(1)}50%{filter:brightness(1.3)}
+}
+.confetti-piece{
+  position:fixed;width:8px;height:8px;z-index:200;pointer-events:none;
+  animation:confettiFall linear forwards;
+}
+@keyframes confettiFall{
+  0%{opacity:1;transform:translateY(-10vh) rotate(0deg)}
+  100%{opacity:0;transform:translateY(110vh) rotate(720deg)}
+}
+
+/* ===== 动画 ===== */
+.fade-in{animation:fadeIn .6s ease forwards}
+.fade-out{animation:fadeOut .4s ease forwards}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-20px)}}
+.bounce-in{animation:bounceIn .8s cubic-bezier(.17,.67,.29,1.35) forwards}
+@keyframes bounceIn{0%{opacity:0;transform:scale(.3)}60%{transform:scale(1.1)}100%{opacity:1;transform:scale(1)}}
+
+@media(max-width:480px){
+  .result-card{padding:40px 24px}
+  .score-display{font-size:72px}
+}
+</style>
+</head>
+<body>
+<div class="scanline"></div>
+<button class="close-btn" onclick="showPerfectScore()" title="关闭">✕</button>
+
+<!-- 首页 -->
+<div class="container home-page" id="homePage">
+  <div class="badge">Since 1987 · Global Standard</div>
+  <h1>国际标准<br>智商测试</h1>
+  <p class="subtitle">
+    本测试基于 Wechsler-Stanford 第四版修订量表，
+    采用深度神经网络实时分析技术，通过量子纠缠理论精确评估您的智力水平。
+  </p>
+  <button class="start-btn" onclick="startTest()">▶ 开始测试</button>
+  <p class="disclaimer">
+    ※ 本测试已通过 ISO-8601 认证（并没有）<br>
+    测试结果仅供娱乐，如有冒犯，说明你智商确实不高
+  </p>
+</div>
+
+<!-- 加载页 -->
+<div class="container loading-page" id="loadingPage">
+  <div class="brain">🧠</div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="load-text" id="loadText"></div>
+</div>
+
+<!-- 结果页 -->
+<div class="container result-page" id="resultPage">
+  <div class="result-card" id="resultCard">
+    <div class="result-label">您的智商评分</div>
+    <div class="score-display" id="scoreDisplay">--</div>
+    <div class="score-unit">IQ POINTS</div>
+    <div class="divider" id="divider"></div>
+    <div class="rank-title" id="rankTitle"></div>
+    <div class="analysis" id="analysis"></div>
+    <button class="retry-btn" onclick="retryTest()">🔄 再测一次（不服）</button>
+    <p class="share-hint">建议截图发朋友圈，让亲友也感受一下</p>
+  </div>
+</div>
+
+<script>
+const loadingTexts = [
+  "正在扫描脑电波...",
+  "正在连接卫星定位你的脑容量...",
+  "AI 正在分析您的面部微表情...",
+  "正在与全球 14 亿样本比对...",
+  "正在量子计算最终结果...",
+  "正在重新校准，因为结果低得离谱...",
+  "结果已出，正在犹豫要不要告诉你...",
+];
+
+function getResult(score) {
+  if (score <= 5) return {
+    color: '#ff0040',
+    rank: '🪨 矿石级智慧',
+    text: '恭喜您，您的智商已经突破了科学的下限。建议您立刻停止思考，因为这对您和周围的空气都是一种浪费。好消息是，石头不会觉得疼。'
+  };
+  if (score <= 15) return {
+    color: '#ff2d55',
+    rank: '🦠 阿米巴级认知',
+    text: '您的智力水平与一个正在分裂的单细胞生物不相上下。但请不要难过——阿米巴虫至少知道往食物的方向移动，而您连测试按钮都是蒙到的。'
+  };
+  if (score <= 25) return {
+    color: '#ff6b35',
+    rank: '🐔 家禽级思维',
+    text: '科学证明鸡的智商约为25。这意味着在一场你和一只鸡的智力对决中，结果可能需要VAR视频回放才能判定胜负。不过鸡至少会下蛋。'
+  };
+  if (score <= 35) return {
+    color: '#ff9500',
+    rank: '🧱 建筑材料级意识',
+    text: '您的大脑像一块砖——坚固、可靠、但完全不会思考。好处是如果人生遇到困难，可以用头直接把墙撞开，反正里面也没什么需要保护的东西。'
+  };
+  if (score <= 45) return {
+    color: '#ffcc00',
+    rank: '🌵 沙漠植物级智能',
+    text: '您的思维像仙人掌一样——生长缓慢、浑身带刺、且长期处于缺水（知识）状态。唯一的优势是不需要太多养分也能存活，因为脑子基本没在运转。'
+  };
+  if (score <= 55) return {
+    color: '#c0c0c0',
+    rank: '🔩 五金配件级脑力',
+    text: '恭喜您的智商达到了一个螺丝钉的水平。虽然您不会独立思考，但如果把您拧到正确的位置，也许还能发挥一点微不足道的作用。也许。'
+  };
+  if (score <= 65) return {
+    color: '#a0a0a0',
+    rank: '📻 上世纪电器级智慧',
+    text: '您的大脑运行速度大约相当于一台1998年的收音机——能接收信号，但经常串台，偶尔还会发出刺耳的噪音。建议拍两下看看能不能恢复正常。'
+  };
+  if (score <= 75) return {
+    color: '#8e8e93',
+    rank: '🦥 树懒级处理器',
+    text: '您具备基本的认知功能，只是运转速度令人发指的慢。别人灵光一闪的瞬间，您的大脑才刚加载完开机画面。好消息是——至少它还能开机。'
+  };
+  if (score <= 85) return {
+    color: '#888',
+    rank: '🧊 即将解冻的智商',
+    text: '您的智力像冷冻食品一样——本体可能没问题，但目前处于完全冻结状态。建议放到微波炉里转30秒，也许能恢复到"勉强能吃"的水平。'
+  };
+  if (score <= 95) return {
+    color: '#aaa',
+    rank: '🥉 及格线守门员',
+    text: '您的智商离正常人就差临门一脚了，可惜这一脚您踢到了门框上。处于一种"说您笨吧不至于，说您聪明吧又没证据"的量子叠加态。'
+  };
+  return {
+    color: '#bbb',
+    rank: '🎲 薛定谔的聪明',
+    text: '您的智商在96-99之间反复横跳，处于"接近正常但永远差一点"的痛苦区间。就像高考差一分上本科线，驾照考试99分但压线了。人生就是这么残酷。'
+  };
+}
+
+const perfectResult = {
+  color: '#ffd700',
+  rank: '👑 正常人类智力水平',
+  text: '恭喜您！您的智商达到了100，也就是标准正常人类水平。这意味着您终于可以自豪地说："我是一个正常人了！" 虽然这似乎也没什么好骄傲的。\n\n（其实秘密是：只有懂得点右上角关闭的人，才拥有真正的智慧。）'
+};
+
+function startTest() {
+  const home = document.getElementById('homePage');
+  const loading = document.getElementById('loadingPage');
+  home.classList.add('fade-out');
+  setTimeout(() => {
+    home.style.display = 'none';
+    loading.style.display = 'flex';
+    loading.classList.add('fade-in');
+    runLoading();
+  }, 400);
+}
+
+function runLoading() {
+  const fill = document.getElementById('progressFill');
+  const textEl = document.getElementById('loadText');
+  let progress = 0;
+  let textIndex = 0;
+  textEl.textContent = loadingTexts[0];
+
+  const interval = setInterval(() => {
+    progress += Math.random() * 6 + 2;
+    if (progress > 100) progress = 100;
+    fill.style.width = progress + '%';
+
+    const newIndex = Math.min(Math.floor(progress / (100 / loadingTexts.length)), loadingTexts.length - 1);
+    if (newIndex !== textIndex) {
+      textIndex = newIndex;
+      textEl.style.opacity = 0;
+      setTimeout(() => {
+        textEl.textContent = loadingTexts[textIndex];
+        textEl.style.opacity = 1;
+      }, 200);
+    }
+
+    if (progress >= 100) {
+      clearInterval(interval);
+      setTimeout(() => showResult(Math.floor(Math.random() * 100)), 600);
+    }
+  }, 250);
+}
+
+function showResult(score, isPerfect = false) {
+  const loading = document.getElementById('loadingPage');
+  const result = document.getElementById('resultPage');
+  const card = document.getElementById('resultCard');
+
+  loading.classList.add('fade-out');
+  setTimeout(() => {
+    loading.style.display = 'none';
+    loading.classList.remove('fade-in', 'fade-out');
+    result.style.display = 'flex';
+    result.classList.add('fade-in');
+
+    const data = isPerfect ? perfectResult : getResult(score);
+    document.getElementById('scoreDisplay').textContent = isPerfect ? '100' : score;
+    document.getElementById('divider').style.background = `linear-gradient(90deg, transparent, ${data.color}, transparent)`;
+    document.getElementById('rankTitle').textContent = data.rank;
+    document.getElementById('rankTitle').style.color = data.color;
+    document.getElementById('analysis').textContent = data.text;
+
+    if (isPerfect) {
+      card.classList.add('score-100');
+      document.getElementById('scoreDisplay').style.color = '';
+      launchConfetti();
+    } else {
+      card.classList.remove('score-100');
+      document.getElementById('scoreDisplay').style.color = data.color;
+    }
+
+    card.classList.add('bounce-in');
+    setTimeout(() => card.classList.remove('bounce-in'), 800);
+  }, 400);
+}
+
+function retryTest() {
+  const result = document.getElementById('resultPage');
+  const loading = document.getElementById('loadingPage');
+  const fill = document.getElementById('progressFill');
+
+  result.classList.add('fade-out');
+  setTimeout(() => {
+    result.style.display = 'none';
+    result.classList.remove('fade-in', 'fade-out');
+    fill.style.width = '0%';
+    loading.style.display = 'flex';
+    loading.classList.add('fade-in');
+    // clear confetti
+    document.querySelectorAll('.confetti-piece').forEach(c => c.remove());
+    runLoading();
+  }, 400);
+}
+
+function showPerfectScore() {
+  // 如果在首页或加载页，先隐藏
+  document.getElementById('homePage').style.display = 'none';
+  const loading = document.getElementById('loadingPage');
+  loading.style.display = 'none';
+  loading.classList.remove('fade-in','fade-out');
+  const result = document.getElementById('resultPage');
+  // 如果已经在结果页，先隐藏
+  result.style.display = 'none';
+  result.classList.remove('fade-in','fade-out');
+  document.querySelectorAll('.confetti-piece').forEach(c => c.remove());
+
+  // 直接显示100分结果
+  setTimeout(() => showResult(100, true), 100);
+}
+
+function launchConfetti() {
+  const colors = ['#ffd700','#ff2d75','#00f0ff','#a020f0','#ff6b35','#00ff88'];
+  for (let i = 0; i < 60; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti-piece';
+    c.style.left = Math.random() * 100 + 'vw';
+    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+    c.style.borderRadius = Math.random() > .5 ? '50%' : '2px';
+    c.style.width = (Math.random() * 8 + 4) + 'px';
+    c.style.height = (Math.random() * 8 + 4) + 'px';
+    c.style.animationDuration = (Math.random() * 2 + 2) + 's';
+    c.style.animationDelay = (Math.random() * 1.5) + 's';
+    document.body.appendChild(c);
+  }
+}
+</script>
+</body>
+</html>
